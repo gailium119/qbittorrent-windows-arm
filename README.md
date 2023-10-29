@@ -7,4 +7,4 @@ Please go to [releases](https://github.com/gailium119/qbittorrent-windows-arm/re
 
 ### Cross compile on Windows x64
 
-This is the way we release qBittorrent for Windows on ARM. A [workflow file](https://github.com/gailium119/qbittorrent-windows-arm64/blob/main/.github/workflows/ci_windows_arm.yaml) is written to automatically build with Github actions.
+This is the way we release qBittorrent for Windows on ARM. A [workflow file](https://github.com/gailium119/qbittorrent-windows-arm/blob/main/.github/workflows/ci_windows_arm.yaml) is written to automatically build with Github actions.
