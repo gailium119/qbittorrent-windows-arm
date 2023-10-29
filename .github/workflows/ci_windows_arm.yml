@@ -42,8 +42,8 @@ jobs:
         run: |
           # clear buildtrees after each package installation to reduce disk space requirements
           $packages = `
-            "openssl:arm-windows-static-release",
-            "zlib:arm-windows-static-release"
+            "openssl:arm-windows-static",
+            "zlib:arm-windows-static"
           ${{ env.RUNVCPKG_VCPKG_ROOT }}/vcpkg.exe upgrade `
             --overlay-triplets="${{ github.workspace }}/triplets_overlay" `
             --no-dry-run
