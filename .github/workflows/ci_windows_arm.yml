@@ -101,7 +101,7 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF `
             -Ddeprecated-functions=OFF `
             -Dstatic_runtime=ON `
-            -DVCPKG_TARGET_TRIPLET=arm-windows-static-release
+            -DVCPKG_TARGET_TRIPLET=arm-windows-static
           cmake --build build
           cmake --install build
           
@@ -120,7 +120,7 @@ jobs:
             -DLibtorrentRasterbar_DIR="${{ env.libtorrent_path }}/lib/cmake/LibtorrentRasterbar" `
             -DMSVC_RUNTIME_DYNAMIC=OFF `
             -DQT6=ON `
-            -DVCPKG_TARGET_TRIPLET=arm-windows-static-release
+            -DVCPKG_TARGET_TRIPLET=arm-windows-static
           cmake --build build
 
       - name: Prepare build artifacts
