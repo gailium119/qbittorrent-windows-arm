@@ -1,4 +1,4 @@
-name: Build for Windows ARM64
+name: Build for Windows ARM
 
 on:
   push:
@@ -6,13 +6,13 @@ on:
     - '*'
 
 jobs:
-  build-windows-arm64:
+  build-windows-arm:
     name: Build
     runs-on: windows-latest
     env:
       boost_path: "${{ github.workspace }}/../boost"
-      libtorrent_path: "${{ github.workspace }}/libtorrent-msvc-arm64"
-      qt_path: "${{ github.workspace }}/../qt-msvc-arm64"
+      libtorrent_path: "${{ github.workspace }}/libtorrent-msvc-arm"
+      qt_path: "${{ github.workspace }}/../qt-msvc-arm"
       libt_version: "2.0.9"
       qbt_version: "4.6.0"
       qt_version: "6.6.0"
@@ -24,7 +24,7 @@ jobs:
       - name: Setup devcmd
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: amd64_arm64
+          arch: amd64_arm
 
       - name: Install build tools
         run: |
@@ -42,8 +42,8 @@ jobs:
         run: |
           # clear buildtrees after each package installation to reduce disk space requirements
           $packages = `
-            "openssl:arm64-windows-static-release",
-            "zlib:arm64-windows-static-release"
+            "openssl:arm-windows-static-release",
+            "zlib:arm-windows-static-release"
           ${{ env.RUNVCPKG_VCPKG_ROOT }}/vcpkg.exe upgrade `
             --overlay-triplets="${{ github.workspace }}/triplets_overlay" `
             --no-dry-run
@@ -69,17 +69,17 @@ jobs:
           set-env: 'false'
           dir: 'C:'
 
-      - name: Install Qt (target arm64)
+      - name: Install Qt (target arm)
         run: |
           git clone https://github.com/qt/qt5.git qt6
           cd qt6
           git checkout "v${{ env.qt_version }}"
           perl init-repository --module-subset=qtbase,qtsvg
           ./configure -opensource -confirm-license -nomake tests -nomake examples `
-            -static -static-runtime -release -xplatform win32-arm64-msvc `
+            -static -static-runtime -release -xplatform win32-arm-msvc `
             -prefix "${{ env.qt_path }}" -qt-host-path "C:/Qt/${{ env.qt_version }}/msvc2019_64" `
             -system-zlib -no-openssl -schannel -qt-sqlite -sql-sqlite -no-sql-mysql -no-sql-odbc -no-sql-psql -- -DCMAKE_TOOLCHAIN_FILE="${{ env.RUNVCPKG_VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" `
-            -DVCPKG_TARGET_TRIPLET=arm64-windows-static-release 
+            -DVCPKG_TARGET_TRIPLET=arm-windows-static-release 
           cmake --build .
           cmake --install .
 
@@ -101,7 +101,7 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF `
             -Ddeprecated-functions=OFF `
             -Dstatic_runtime=ON `
-            -DVCPKG_TARGET_TRIPLET=arm64-windows-static-release
+            -DVCPKG_TARGET_TRIPLET=arm-windows-static-release
           cmake --build build
           cmake --install build
           
@@ -120,7 +120,7 @@ jobs:
             -DLibtorrentRasterbar_DIR="${{ env.libtorrent_path }}/lib/cmake/LibtorrentRasterbar" `
             -DMSVC_RUNTIME_DYNAMIC=OFF `
             -DQT6=ON `
-            -DVCPKG_TARGET_TRIPLET=arm64-windows-static-release
+            -DVCPKG_TARGET_TRIPLET=arm-windows-static-release
           cmake --build build
 
       - name: Prepare build artifacts
@@ -129,13 +129,13 @@ jobs:
           copy qbittorrent-${{ env.qbt_version }}/build/qbittorrent.exe upload
           copy qbittorrent-${{ env.qbt_version }}/dist/windows/qt.conf upload
           cd upload
-          7z a qbittorrent_${{ env.qbt_version }}_arm64.zip *
-          mv qbittorrent_${{ env.qbt_version }}_arm64.zip ..
+          7z a qbittorrent_${{ env.qbt_version }}_arm.zip *
+          mv qbittorrent_${{ env.qbt_version }}_arm.zip ..
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: qBittorrent_${{ env.qbt_version }}_arm64
+          name: qBittorrent_${{ env.qbt_version }}_arm
           path: upload
      
       - name: Batch release
@@ -143,4 +143,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: qbittorrent_${{ env.qbt_version }}_arm64.zip
+          files: qbittorrent_${{ env.qbt_version }}_arm.zip
